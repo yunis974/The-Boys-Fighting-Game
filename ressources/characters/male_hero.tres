@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="CharacterData" format=3 uid="uid://xb68gby6i27v"]
+
+[ext_resource type="Script" uid="uid://cfiu5lm1etqfq" path="res://scripts/character_data.gd" id="1_data"]
+[ext_resource type="SpriteFrames" uid="uid://bgvqu5oinysg3" path="res://ressources/sprites/animation/male_hero_frames.tres" id="2_frames"]
+
+[resource]
+script = ExtResource("1_data")
+display_name = "Male Hero"
+sprite_frames = ExtResource("2_frames")

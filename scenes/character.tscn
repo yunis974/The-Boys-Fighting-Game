@@ -1,0 +1,45 @@
+[gd_scene format=3 uid="uid://cd5p8x3hn0u22"]
+
+[ext_resource type="Script" uid="uid://cfjbnax0aby5r" path="res://scripts/player.gd" id="1_script"]
+[ext_resource type="SpriteFrames" uid="uid://bgvqu5oinysg3" path="res://ressources/sprites/animation/male_hero_frames.tres" id="2_frames"]
+[ext_resource type="Resource" uid="uid://xb68gby6i27v" path="res://ressources/characters/male_hero.tres" id="3_data"]
+[ext_resource type="Script" uid="uid://crs5nebedmv0" path="res://scripts/state_machine/state_machine.gd" id="4_sm"]
+[ext_resource type="Script" uid="uid://ccfer4kk0rrux" path="res://scripts/state_machine/states/idle.gd" id="5_idle"]
+[ext_resource type="Script" uid="uid://cc6ou1am84fnd" path="res://scripts/state_machine/states/run.gd" id="6_run"]
+[ext_resource type="Script" uid="uid://csnx24n2bvaw7" path="res://scripts/state_machine/states/run_stop.gd" id="7_runstop"]
+[ext_resource type="Script" uid="uid://uqfhh6eno64y" path="res://scripts/state_machine/states/jump.gd" id="8_jump"]
+[ext_resource type="Script" uid="uid://cwt6csklglud4" path="res://scripts/state_machine/states/fall.gd" id="9_fall"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_fv0hk"]
+radius = 8.0
+height = 32.0
+
+[node name="Character" type="CharacterBody2D" unique_id=912897728]
+script = ExtResource("1_script")
+data = ExtResource("3_data")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=772674727]
+shape = SubResource("CapsuleShape2D_fv0hk")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=685879910]
+sprite_frames = ExtResource("2_frames")
+animation = &"idle"
+
+[node name="StateMachine" type="Node" parent="." unique_id=530184726 node_paths=PackedStringArray("initial_state")]
+script = ExtResource("4_sm")
+initial_state = NodePath("Idle")
+
+[node name="Idle" type="Node" parent="StateMachine" unique_id=530184727]
+script = ExtResource("5_idle")
+
+[node name="Run" type="Node" parent="StateMachine" unique_id=530184728]
+script = ExtResource("6_run")
+
+[node name="RunStop" type="Node" parent="StateMachine" unique_id=530184729]
+script = ExtResource("7_runstop")
+
+[node name="Jump" type="Node" parent="StateMachine" unique_id=530184730]
+script = ExtResource("8_jump")
+
+[node name="Fall" type="Node" parent="StateMachine" unique_id=530184731]
+script = ExtResource("9_fall")

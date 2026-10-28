@@ -1,0 +1,115 @@
+[gd_scene format=3 uid="uid://dk80svom16vyi"]
+
+[ext_resource type="Script" uid="uid://baidskvvegfos" path="res://scripts/debug_menu.gd" id="1_rta6x"]
+[ext_resource type="Script" uid="uid://dpt0aao0uen7t" path="res://scripts/debug_arrow.gd" id="2_arrow"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_panel"]
+content_margin_left = 16.0
+content_margin_top = 12.0
+content_margin_right = 16.0
+content_margin_bottom = 12.0
+bg_color = Color(0, 0, 0, 0.6)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="LabelSettings" id="LabelSettings_title"]
+font_size = 18
+font_color = Color(1, 0.8, 0.3, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_info"]
+font_size = 22
+
+[node name="DebugMenu" type="Control" unique_id=1163887173]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("1_rta6x")
+
+[node name="Panel" type="PanelContainer" parent="." unique_id=1573029582]
+layout_mode = 0
+offset_left = 16.0
+offset_top = 16.0
+offset_right = 316.0
+offset_bottom = 316.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_panel")
+
+[node name="VBox" type="VBoxContainer" parent="Panel" unique_id=1787212200]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="Title" type="Label" parent="Panel/VBox" unique_id=1614119831]
+layout_mode = 2
+text = "DEBUG"
+label_settings = SubResource("LabelSettings_title")
+
+[node name="Info" type="Label" parent="Panel/VBox" unique_id=1452810735]
+unique_name_in_owner = true
+layout_mode = 2
+text = "State:
+Velocity:
+On floor:
+Axis:"
+label_settings = SubResource("LabelSettings_info")
+
+[node name="HSeparator" type="HSeparator" parent="Panel/VBox" unique_id=609669615]
+layout_mode = 2
+
+[node name="Center" type="CenterContainer" parent="Panel/VBox" unique_id=2004040352]
+layout_mode = 2
+
+[node name="Arrows" type="GridContainer" parent="Panel/VBox/Center" unique_id=314718487]
+layout_mode = 2
+columns = 3
+
+[node name="Empty1" type="Control" parent="Panel/VBox/Center/Arrows" unique_id=314718488]
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 2
+
+[node name="Up" type="Control" parent="Panel/VBox/Center/Arrows" unique_id=763009472]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 2
+script = ExtResource("2_arrow")
+
+[node name="Empty2" type="Control" parent="Panel/VBox/Center/Arrows" unique_id=314718489]
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 2
+
+[node name="Left" type="Control" parent="Panel/VBox/Center/Arrows" unique_id=681309357]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 2
+script = ExtResource("2_arrow")
+angle_degrees = 270.0
+
+[node name="Empty3" type="Control" parent="Panel/VBox/Center/Arrows" unique_id=314718490]
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 2
+
+[node name="Right" type="Control" parent="Panel/VBox/Center/Arrows" unique_id=1060516047]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 2
+script = ExtResource("2_arrow")
+angle_degrees = 90.0
+
+[node name="Empty4" type="Control" parent="Panel/VBox/Center/Arrows" unique_id=314718491]
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 2
+
+[node name="Down" type="Control" parent="Panel/VBox/Center/Arrows" unique_id=314718486]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 2
+script = ExtResource("2_arrow")
+angle_degrees = 180.0
+
+[node name="Empty5" type="Control" parent="Panel/VBox/Center/Arrows" unique_id=314718492]
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 2

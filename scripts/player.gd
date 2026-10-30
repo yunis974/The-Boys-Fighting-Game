@@ -12,15 +12,12 @@ class InputDirection:
 @export var data: CharacterData
 
 @onready var sprite: AnimatedSprite2D = $AnimatedSprite2D
-@onready var state_machine: StateMachine = $StateMachine
 
 var input_dir := InputDirection.new()
-
+var is_jumping := false
 
 func _ready() -> void:
-	sprite.sprite_frames = data.sprite_frames
-	sprite.animation_finished.connect(_on_animation_finished)
-	state_machine.init(self)
+	pass
 
 
 func _physics_process(delta: float) -> void:
@@ -28,8 +25,8 @@ func _physics_process(delta: float) -> void:
 
 	if not is_on_floor():
 		velocity.y += data.gravity * delta
-
-	state_machine.physics_update(delta)
+	move(delta)
+	jump()
 	move_and_slide()
 
 
@@ -71,13 +68,7 @@ func _update_input_direction() -> void:
 		input_dir.left = false
 		input_dir.right = false
 	
-	#input_dir.up = up_down > 0 and input_dir.axis.y > input_dir.axis.x
-	#input_dir.down = up_down < 0 and input_dir.axis.y < input_dir.axis.x
-	#input_dir.left = left_right < 0 
-	#input_dir.right = left_right > 0
 
-
-# --- Helpers used by the states ---
 
 func get_input_direction() -> float:
 	return input_dir.axis.x
@@ -93,9 +84,7 @@ func move(delta: float) -> void:
 
 
 func jump() -> void:
-	velocity.y = data.jump_velocity
-
-
-func _on_animation_finished() -> void:
-	if state_machine.current_state:
-		state_machine.current_state.on_animation_finished()
+	if !is_jumping:
+		velocity.y = data.jump_velocity
+		is_jumping = true
+	

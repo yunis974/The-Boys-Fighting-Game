@@ -13,8 +13,7 @@ extends Control
 
 func _process(_delta: float) -> void:
 	var dir = player.input_dir
-	info.text = "State: %s\nVelocity: %s\nOn floor: %s\nAxis: %s" % [
-		player.state_machine.current_state.name,
+	info.text = "nVelocity: %s\nOn floor: %s\nAxis: %s" % [
 		player.velocity.round(),
 		player.is_on_floor(),
 		dir.axis,

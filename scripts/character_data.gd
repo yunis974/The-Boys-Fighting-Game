@@ -6,7 +6,6 @@ extends Resource
 
 @export var display_name : String = "Character"
 @export var sprite_frames : SpriteFrames
-
 @export_group("Movement")
 @export var speed : float = 300.0
 @export var acceleration : float = 3000.0

@@ -22,7 +22,8 @@ func _ready() -> void:
 
 func _physics_process(delta: float) -> void:
 	_update_input_direction()
-
+	
+	
 	if not is_on_floor():
 		velocity.y += data.gravity * delta
 	move(delta)
@@ -84,7 +85,10 @@ func move(delta: float) -> void:
 
 
 func jump() -> void:
-	if !is_jumping:
-		velocity.y = data.jump_velocity
-		is_jumping = true
+	if Input.is_action_just_pressed("jump") && is_on_floor():
+			velocity.y = data.jump_velocity
+			is_jumping = true
 	
+	
+	if is_on_floor():
+		is_jumping = false

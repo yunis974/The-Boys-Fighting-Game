@@ -28,6 +28,7 @@ var was_on_floor = false
 var is_jumping : bool = false 
 var character_state := CharacterState.NEUTRAL
 var character_frames : int = 0
+var is_falling: bool = false
 
 func _ready() -> void:
 	pass
@@ -107,17 +108,26 @@ func jump() -> void:
 	
 	if Input.is_action_just_released("jump") && is_jumping && velocity.y < 0:
 		velocity.y *= data.jump_cut_multiplier
-
-
+	
+	#checking wether the player is actually jumping (going up) or falling,
+	if velocity.y < 0: 
+		is_falling = false
+	else:
+		is_falling = true
+	
+	#applying different gravity force if player jumping or falling
 	if !on_floor:
-		velocity.y += data.gravity
+		if is_falling:
+			velocity.y += data.gravity
+		else:
+			velocity.y += data.jumping_gravity
 		if can_coyote && !is_jumping:
 			can_coyote = false
 			coyote_tim.start()
 			is_in_coyote = true
 
 
-
+#timer for the coyotee time, started when player is falling but no jump
 func _on_coyote_timer_timeout() -> void:
 	is_in_coyote = false
 

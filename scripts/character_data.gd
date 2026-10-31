@@ -14,7 +14,8 @@ extends Resource
 @export var deceleration : float = 3000.0
 
 @export_group("Gravity")
-@export var gravity : float = 1500.0  # pixels/s²
+@export var gravity : float = 35.0
+@export var jumping_gravity : float = 25.0
 
 @export_group("Jump")
 @export var jump_velocity : float = -650.0

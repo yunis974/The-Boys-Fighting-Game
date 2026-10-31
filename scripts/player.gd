@@ -10,7 +10,7 @@ class InputDirection:
 	var axis := Vector2.ZERO   # x: -1 left / +1 right, y: -1 down / +1 up
 	
 enum CharacterState {BLOCKING, ACTIVE, RECOVERING, AIRBORN, NEUTRAL}
-
+enum CharacterInput {UP, DOWN, LEFT, RIGHT}
 @export var data: CharacterData
 
 @onready var coyote_tim = $Coyote_timer
@@ -29,6 +29,12 @@ var is_jumping : bool = false
 var character_state := CharacterState.NEUTRAL
 var character_frames : int = 0
 var is_falling: bool = false
+var is_dashing : bool = false
+
+var input_buf : Array[CharacterInput]
+var input_max_size : int = 4
+
+
 
 func _ready() -> void:
 	pass
@@ -60,6 +66,12 @@ func _physics_process(delta: float) -> void:
 	move_and_slide()
 
 # --- Input ---
+
+func add_input_buf(state: CharacterInput):
+	input_buf.push_front(state)
+	if input_buf.size() > input_max_size:
+		input_buf.pop_back()
+	
 
 func _update_input_direction() -> void:
 	input_dir.up = false
@@ -94,8 +106,12 @@ func get_input_direction() -> float:
 
 
 func move() -> void:
-	var direction := get_input_direction()
-	if direction != 0.0:
+	var direction : int
+	if Input.is_action_just_pressed("left"):
+		direction = -1
+	if Input.is_action_just_pressed("right"):
+		direction = 1
+	if direction != 0:
 		sprite.flip_h = direction < 0
 		velocity.x = move_toward(velocity.x, direction * data.speed, data.acceleration)
 	else:
@@ -133,6 +149,21 @@ func jump() -> void:
 #timer for the coyotee time, started when player is falling but no jump
 func _on_coyote_timer_timeout() -> void:
 	is_in_coyote = false
+
+func _unhandled_input(event):
+	if event.is_action_pressed("up"):
+		add_input_buf(CharacterInput.UP)
+	
+	if event.is_action_pressed("down"):
+		add_input_buf(CharacterInput.DOWN)
+		
+	if event.is_action_pressed("left"):
+		add_input_buf(CharacterInput.LEFT)
+		
+	if event.is_action_pressed("right"):
+		add_input_buf(CharacterInput.RIGHT)
+
+
 
 
 func check_on_ground():

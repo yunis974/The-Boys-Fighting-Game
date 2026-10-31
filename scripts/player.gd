@@ -35,16 +35,19 @@ func _ready() -> void:
 func _update_frames() -> void:
 	if character_frames != 0:
 		character_frames += -1
-		if character_state == CharacterState.RECOVERING:
-			character_state = CharacterState.NEUTRAL
 			
 func _update_state() -> void:
+	if character_state == CharacterState.BLOCKING:
+		character_state = CharacterState.NEUTRAL
 	if input_dir.down == true and character_frames == 0:
 		if input_dir.left == true or input_dir.right == true:
 			character_state = CharacterState.BLOCKING
 			
-	if not is_on_floor() and character_state == CharacterState.AIRBORN:
+	if is_on_floor() and character_state == CharacterState.AIRBORN:
 		character_state = CharacterState.NEUTRAL
+		
+	if not is_on_floor() and character_frames == 0:
+		character_state = CharacterState.AIRBORN
 			
 func _physics_process(delta: float) -> void:
 	_update_input_direction()

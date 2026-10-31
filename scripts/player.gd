@@ -11,22 +11,27 @@ class InputDirection:
 
 @export var data: CharacterData
 
+@onready var coyote_tim = $Coyote_timer
 @onready var sprite: AnimatedSprite2D = $AnimatedSprite2D
+@onready var ground_cast = $Ground_cast
+@export var coyote_time = 0.5
+var coyete_time_counter = coyote_time
+
 
 var input_dir := InputDirection.new()
 var is_jumping := false
-
+var is_in_coyote := false
+var can_coyote := false
+var on_floor := false
+var was_on_floor = false
 func _ready() -> void:
 	pass
 
 
 func _physics_process(delta: float) -> void:
 	_update_input_direction()
-	
-	
-	if not is_on_floor():
-		velocity.y += data.gravity * delta
-	move(delta)
+	check_on_ground()
+	move()
 	jump()
 	move_and_slide()
 
@@ -75,20 +80,41 @@ func get_input_direction() -> float:
 	return input_dir.axis.x
 
 
-func move(delta: float) -> void:
+func move() -> void:
 	var direction := get_input_direction()
 	if direction != 0.0:
 		sprite.flip_h = direction < 0
-		velocity.x = move_toward(velocity.x, direction * data.speed, data.acceleration * delta)
+		velocity.x = move_toward(velocity.x, direction * data.speed, data.acceleration)
 	else:
-		velocity.x = move_toward(velocity.x, 0.0, data.deceleration * delta)
+		velocity.x = move_toward(velocity.x, 0.0, data.deceleration)
 
 
 func jump() -> void:
-	if Input.is_action_just_pressed("jump") && is_on_floor():
-			velocity.y = data.jump_velocity
-			is_jumping = true
-	
-	
-	if is_on_floor():
+	if Input.is_action_just_pressed("jump") && (on_floor || is_in_coyote):
+		is_jumping = true
+		velocity.y = data.jump_velocity
+		is_in_coyote = false
+		coyote_tim.stop()
+
+	if !on_floor:
+		velocity.y += data.gravity
+		if can_coyote && !is_jumping:
+			can_coyote = false
+			coyote_tim.start()
+			is_in_coyote = true
+
+
+
+func _on_coyote_timer_timeout() -> void:
+	is_in_coyote = false
+
+
+func check_on_ground():
+	if ground_cast.is_colliding() && velocity.y >= 0.0:
+		on_floor = true
 		is_jumping = false
+		is_in_coyote = false
+		can_coyote = true
+		coyote_tim.stop()
+	else:
+		on_floor = false

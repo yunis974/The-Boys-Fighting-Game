@@ -75,12 +75,40 @@ color = Color(0.45, 0.35, 0.25, 1)
 metadata/_edit_use_anchors_ = true
 
 [node name="PlatformHigh" type="StaticBody2D" parent="." unique_id=401928475]
-position = Vector2(501, 211)
+position = Vector2(425, 205)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="PlatformHigh" unique_id=402918476]
 shape = SubResource("RectangleShape2D_platform")
 
 [node name="ColorRect" type="ColorRect" parent="PlatformHigh" unique_id=403918477]
+offset_left = -60.0
+offset_top = -6.0
+offset_right = 60.0
+offset_bottom = 6.0
+color = Color(0.45, 0.35, 0.25, 1)
+metadata/_edit_use_anchors_ = true
+
+[node name="PlatformHigh2" type="StaticBody2D" parent="." unique_id=1666457876]
+position = Vector2(354, 247)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="PlatformHigh2" unique_id=912130700]
+shape = SubResource("RectangleShape2D_platform")
+
+[node name="ColorRect" type="ColorRect" parent="PlatformHigh2" unique_id=1671397232]
+offset_left = -60.0
+offset_top = -6.0
+offset_right = 60.0
+offset_bottom = 6.0
+color = Color(0.45, 0.35, 0.25, 1)
+metadata/_edit_use_anchors_ = true
+
+[node name="PlatformHigh3" type="StaticBody2D" parent="." unique_id=769118958]
+position = Vector2(500, 164)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="PlatformHigh3" unique_id=1294977014]
+shape = SubResource("RectangleShape2D_platform")
+
+[node name="ColorRect" type="ColorRect" parent="PlatformHigh3" unique_id=2099889917]
 offset_left = -60.0
 offset_top = -6.0
 offset_right = 60.0

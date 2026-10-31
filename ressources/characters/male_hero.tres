@@ -5,3 +5,6 @@
 [resource]
 script = ExtResource("1_data")
 display_name = "Male Hero"
+acceleration = 100.0
+deceleration = 100.0
+gravity = 35.0

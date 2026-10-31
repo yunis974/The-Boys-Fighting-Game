@@ -8,6 +8,9 @@
 radius = 8.0
 height = 32.0
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_lrhn5"]
+size = Vector2(7.211, 1.902)
+
 [node name="Character" type="CharacterBody2D" unique_id=912897728]
 script = ExtResource("1_script")
 data = ExtResource("3_data")
@@ -22,3 +25,13 @@ animation = &""
 position = Vector2(-1.1920929e-07, -1.3113022e-06)
 scale = Vector2(0.09374999, 0.21875)
 texture = ExtResource("3_lrhn5")
+
+[node name="Coyote_timer" type="Timer" parent="." unique_id=1113385773]
+wait_time = 0.1
+
+[node name="Ground_cast" type="ShapeCast2D" parent="." unique_id=363494295]
+position = Vector2(0, 15.832)
+shape = SubResource("RectangleShape2D_lrhn5")
+target_position = Vector2(0, 0)
+
+[connection signal="timeout" from="Coyote_timer" to="." method="_on_coyote_timer_timeout"]

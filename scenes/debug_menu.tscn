@@ -54,7 +54,8 @@ layout_mode = 2
 text = "State:
 Velocity:
 On floor:
-Axis:"
+is_jumping:
+is_coyote:"
 label_settings = SubResource("LabelSettings_info")
 
 [node name="HSeparator" type="HSeparator" parent="Panel/VBox" unique_id=609669615]

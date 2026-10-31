@@ -13,10 +13,12 @@ extends Control
 
 func _process(_delta: float) -> void:
 	var dir = player.input_dir
-	info.text = "nVelocity: %s\nOn floor: %s\nAxis: %s" % [
+	info.text = "nVelocity: %s\nOn floor: %s\nis_jumping: %s\nis_coyote: %s\nWas_on_floor: %s" % [
 		player.velocity.round(),
-		player.is_on_floor(),
-		dir.axis,
+		player.on_floor,
+		player.is_jumping,
+		player.is_in_coyote,
+		player.was_on_floor,
 	]
 	up.active = dir.up
 	down.active = dir.down

@@ -29,16 +29,20 @@ func _update_frames() -> void:
 		if character_state == CharacterState.RECOVERING:
 			character_state = CharacterState.NEUTRAL
 			
+func _update_state() -> void:
+	if input_dir.down == true and character_frames == 0:
+		if input_dir.left == true or input_dir.right == true:
+			character_state = CharacterState.BLOCKING
+			
+	if not is_on_floor() and character_state == CharacterState.AIRBORN:
+		character_state = CharacterState.NEUTRAL
+			
 func _physics_process(delta: float) -> void:
 	_update_input_direction()
 	_update_frames()
 
 	if not is_on_floor():
 		velocity.y += data.gravity * delta
-		character_state = CharacterState.AIRBORN
-	
-	if is_on_floor() and character_state == CharacterState.AIRBORN:
-		character_state = CharacterState.NEUTRAL
 	
 	move(delta)
 	jump()
@@ -47,6 +51,11 @@ func _physics_process(delta: float) -> void:
 # --- Input ---
 
 func _update_input_direction() -> void:
+	input_dir.up = false
+	input_dir.down = false
+	input_dir.left = false
+	input_dir.right = false
+	
 	var up_down := Input.get_axis("down", "up")
 	var left_right := Input.get_axis("left", "right")
 
@@ -54,35 +63,15 @@ func _update_input_direction() -> void:
 	
 	if input_dir.axis.y > input_dir.axis.x and input_dir.axis.y > 0:
 		input_dir.up = true
-		input_dir.down = false
-		input_dir.left = false
-		input_dir.right = false
 	
 	if input_dir.axis.y < input_dir.axis.x and input_dir.axis.y < 0:
-		input_dir.up = false
 		input_dir.down = true
-		input_dir.left = false
-		input_dir.right = false
 		
 	if input_dir.axis.x > abs(input_dir.axis.y) and input_dir.axis.x > 0:
-		input_dir.up = false
-		input_dir.down = false
-		input_dir.left = false
 		input_dir.right = true
 		
 	if abs(input_dir.axis.x) > input_dir.axis.y and input_dir.axis.x < 0:
-		input_dir.up = false
-		input_dir.down = false
 		input_dir.left = true
-		input_dir.right = false
-	
-	if input_dir.axis == Vector2(0,0):
-		input_dir.up = false
-		input_dir.down = false
-		input_dir.left = false
-		input_dir.right = false
-	
-
 
 func get_input_direction() -> float:
 	return input_dir.axis.x

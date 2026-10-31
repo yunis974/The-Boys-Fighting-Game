@@ -1,6 +1,7 @@
 [gd_resource type="Resource" script_class="CharacterData" format=3 uid="uid://xb68gby6i27v"]
 
 [ext_resource type="Script" uid="uid://cfiu5lm1etqfq" path="res://scripts/character_data.gd" id="1_data"]
+[ext_resource type="Script" uid="uid://umgaa58rloaw" path="res://scripts/attack_class.gd" id="1_fm41u"]
 
 [resource]
 script = ExtResource("1_data")
@@ -8,3 +9,4 @@ display_name = "Male Hero"
 acceleration = 100.0
 deceleration = 100.0
 gravity = 35.0
+attacks = Array[ExtResource("1_fm41u")]([null, null])

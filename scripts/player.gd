@@ -8,6 +8,8 @@ class InputDirection:
 	var left: bool
 	var right: bool
 	var axis := Vector2.ZERO   # x: -1 left / +1 right, y: -1 down / +1 up
+	
+enum CharacterState {BLOCKING, ACTIVE, RECOVERING, AIRBORN, NEUTRAL}
 
 @export var data: CharacterData
 
@@ -19,26 +21,48 @@ var coyete_time_counter = coyote_time
 
 
 var input_dir := InputDirection.new()
-var is_jumping := false
 var is_in_coyote := false
 var can_coyote := false
 var on_floor := false
 var was_on_floor = false
+var is_jumping : bool = false 
+var character_state := CharacterState.NEUTRAL
+var character_frames : int = 0
+
 func _ready() -> void:
 	pass
 
-
+func _update_frames() -> void:
+	if character_frames != 0:
+		character_frames += -1
+		if character_state == CharacterState.RECOVERING:
+			character_state = CharacterState.NEUTRAL
+			
+func _update_state() -> void:
+	if input_dir.down == true and character_frames == 0:
+		if input_dir.left == true or input_dir.right == true:
+			character_state = CharacterState.BLOCKING
+			
+	if not is_on_floor() and character_state == CharacterState.AIRBORN:
+		character_state = CharacterState.NEUTRAL
+			
 func _physics_process(delta: float) -> void:
 	_update_input_direction()
 	check_on_ground()
 	move()
+	_update_frames()
+	_update_state()
 	jump()
 	move_and_slide()
-
 
 # --- Input ---
 
 func _update_input_direction() -> void:
+	input_dir.up = false
+	input_dir.down = false
+	input_dir.left = false
+	input_dir.right = false
+	
 	var up_down := Input.get_axis("down", "up")
 	var left_right := Input.get_axis("left", "right")
 
@@ -46,35 +70,15 @@ func _update_input_direction() -> void:
 	
 	if input_dir.axis.y > input_dir.axis.x and input_dir.axis.y > 0:
 		input_dir.up = true
-		input_dir.down = false
-		input_dir.left = false
-		input_dir.right = false
 	
 	if input_dir.axis.y < input_dir.axis.x and input_dir.axis.y < 0:
-		input_dir.up = false
 		input_dir.down = true
-		input_dir.left = false
-		input_dir.right = false
 		
 	if input_dir.axis.x > abs(input_dir.axis.y) and input_dir.axis.x > 0:
-		input_dir.up = false
-		input_dir.down = false
-		input_dir.left = false
 		input_dir.right = true
 		
 	if abs(input_dir.axis.x) > input_dir.axis.y and input_dir.axis.x < 0:
-		input_dir.up = false
-		input_dir.down = false
 		input_dir.left = true
-		input_dir.right = false
-	
-	if input_dir.axis == Vector2(0,0):
-		input_dir.up = false
-		input_dir.down = false
-		input_dir.left = false
-		input_dir.right = false
-	
-
 
 func get_input_direction() -> float:
 	return input_dir.axis.x

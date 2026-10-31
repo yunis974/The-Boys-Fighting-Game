@@ -40,6 +40,7 @@ func _update_state() -> void:
 func _physics_process(delta: float) -> void:
 	_update_input_direction()
 	_update_frames()
+	_update_state()
 
 	if not is_on_floor():
 		velocity.y += data.gravity * delta

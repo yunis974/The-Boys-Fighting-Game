@@ -6,3 +6,4 @@
 [resource]
 script = ExtResource("1_data")
 display_name = "Male Hero"
+attacks = Array[ExtResource("1_fm41u")]([null, null])

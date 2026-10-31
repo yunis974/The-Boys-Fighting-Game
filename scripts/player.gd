@@ -8,27 +8,41 @@ class InputDirection:
 	var left: bool
 	var right: bool
 	var axis := Vector2.ZERO   # x: -1 left / +1 right, y: -1 down / +1 up
+	
+enum CharacterState {BLOCKING, ACTIVE, RECOVERING, AIRBORN, NEUTRAL}
 
 @export var data: CharacterData
 
 @onready var sprite: AnimatedSprite2D = $AnimatedSprite2D
 
 var input_dir := InputDirection.new()
-var is_jumping := false
+var is_jumping : bool = false 
+var character_state := CharacterState.NEUTRAL
+var character_frames : int = 0
 
 func _ready() -> void:
 	pass
 
-
+func _update_frames() -> void:
+	if character_frames != 0:
+		character_frames += -1
+		if character_state == CharacterState.RECOVERING:
+			character_state = CharacterState.NEUTRAL
+			
 func _physics_process(delta: float) -> void:
 	_update_input_direction()
+	_update_frames()
 
 	if not is_on_floor():
 		velocity.y += data.gravity * delta
+		character_state = CharacterState.AIRBORN
+	
+	if is_on_floor() and character_state == CharacterState.AIRBORN:
+		character_state = CharacterState.NEUTRAL
+	
 	move(delta)
 	jump()
 	move_and_slide()
-
 
 # --- Input ---
 

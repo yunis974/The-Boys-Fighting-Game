@@ -104,6 +104,10 @@ func jump() -> void:
 		velocity.y = data.jump_velocity
 		is_in_coyote = false
 		coyote_tim.stop()
+	
+	if Input.is_action_just_released("jump") && is_jumping && velocity.y < 0:
+		velocity.y *= data.jump_cut_multiplier
+
 
 	if !on_floor:
 		velocity.y += data.gravity

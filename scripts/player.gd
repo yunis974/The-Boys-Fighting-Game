@@ -68,17 +68,22 @@ func _update_input_direction() -> void:
 
 	input_dir.axis = Vector2(left_right, up_down)
 	
-	if input_dir.axis.y > input_dir.axis.x and input_dir.axis.y > 0:
+	if up_down > 0:
 		input_dir.up = true
-	
-	if input_dir.axis.y < input_dir.axis.x and input_dir.axis.y < 0:
+	elif up_down < 0:
 		input_dir.down = true
+	else:
+		input_dir.up = false
+		input_dir.down = false
 		
-	if input_dir.axis.x > abs(input_dir.axis.y) and input_dir.axis.x > 0:
+	if left_right > 0:
 		input_dir.right = true
-		
-	if abs(input_dir.axis.x) > input_dir.axis.y and input_dir.axis.x < 0:
+	elif left_right < 0:
 		input_dir.left = true
+	else:
+		input_dir.right = false
+		input_dir.left = false
+
 
 func get_input_direction() -> float:
 	return input_dir.axis.x

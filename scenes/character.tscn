@@ -1,8 +1,17 @@
 [gd_scene format=3 uid="uid://cd5p8x3hn0u22"]
 
 [ext_resource type="Script" uid="uid://cfjbnax0aby5r" path="res://scripts/player.gd" id="1_script"]
-[ext_resource type="Resource" uid="uid://xb68gby6i27v" path="res://ressources/characters/male_hero.tres" id="3_data"]
+[ext_resource type="Script" uid="uid://umgaa58rloaw" path="res://scripts/attack_class.gd" id="2_my7n2"]
+[ext_resource type="Script" uid="uid://cfiu5lm1etqfq" path="res://scripts/character_data.gd" id="3_dp8ca"]
 [ext_resource type="Texture2D" uid="uid://4lrjgvijwxpu" path="res://icon.svg" id="3_lrhn5"]
+
+[sub_resource type="Resource" id="Resource_0lw5n"]
+script = ExtResource("3_dp8ca")
+display_name = "Male Hero"
+attacks = Array[ExtResource("2_my7n2")]([null, null])
+acceleration = 100.0
+deceleration = 100.0
+gravity = 45.0
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_fv0hk"]
 radius = 8.0
@@ -13,7 +22,8 @@ size = Vector2(7.211, 1.902)
 
 [node name="Character" type="CharacterBody2D" unique_id=912897728]
 script = ExtResource("1_script")
-data = ExtResource("3_data")
+data = SubResource("Resource_0lw5n")
+coyote_time = null
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=772674727]
 shape = SubResource("CapsuleShape2D_fv0hk")
@@ -28,10 +38,16 @@ texture = ExtResource("3_lrhn5")
 
 [node name="Coyote_timer" type="Timer" parent="." unique_id=1113385773]
 wait_time = 0.1
+one_shot = true
 
 [node name="Ground_cast" type="ShapeCast2D" parent="." unique_id=363494295]
 position = Vector2(0, 15.832)
 shape = SubResource("RectangleShape2D_lrhn5")
 target_position = Vector2(0, 0)
 
+[node name="Combo_timer" type="Timer" parent="." unique_id=1836146701]
+wait_time = 0.8
+one_shot = true
+
 [connection signal="timeout" from="Coyote_timer" to="." method="_on_coyote_timer_timeout"]
+[connection signal="timeout" from="Combo_timer" to="." method="_on_combo_timer_timeout"]

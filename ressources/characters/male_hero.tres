@@ -2,11 +2,25 @@
 
 [ext_resource type="Script" uid="uid://cfiu5lm1etqfq" path="res://scripts/character_data.gd" id="1_data"]
 [ext_resource type="Script" uid="uid://umgaa58rloaw" path="res://scripts/attack_class.gd" id="1_fm41u"]
+[ext_resource type="Script" uid="uid://0bggvfreii0h" path="res://combo_data.gd" id="2_4ekaq"]
+[ext_resource type="Script" uid="uid://dfsgbr6h1djeo" path="res://scripts/combo_resources.gd" id="3_sgvpu"]
+
+[sub_resource type="Resource" id="Resource_jyhfs"]
+script = ExtResource("2_4ekaq")
+sequence = Array[int]([2, 2, 4])
+action = &"A1"
+metadata/_custom_type_script = "uid://0bggvfreii0h"
+
+[sub_resource type="Resource" id="Resource_sugp2"]
+script = ExtResource("3_sgvpu")
+Combos = Array[ExtResource("2_4ekaq")]([SubResource("Resource_jyhfs")])
+metadata/_custom_type_script = "uid://dfsgbr6h1djeo"
 
 [resource]
 script = ExtResource("1_data")
 display_name = "Male Hero"
 attacks = Array[ExtResource("1_fm41u")]([null, null])
+combo_sequences = SubResource("Resource_sugp2")
 acceleration = 100.0
 deceleration = 100.0
 gravity = 45.0

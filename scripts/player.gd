@@ -10,16 +10,20 @@ class InputDirection:
 	var axis := Vector2.ZERO   # x: -1 left / +1 right, y: -1 down / +1 up
 	
 enum CharacterState {BLOCKING, ACTIVE, RECOVERING, AIRBORN, NEUTRAL}
-enum CharacterInput {UP, DOWN, LEFT, RIGHT}
+enum CharacterInput {UP, DOWN, LEFT, RIGHT, B, Y}
+
+const MAX_TIME_COMBO = 300 #ms
+
+
 @export var data: CharacterData
 
 @onready var coyote_tim = $Coyote_timer
 @onready var sprite: AnimatedSprite2D = $AnimatedSprite2D
 @onready var ground_cast = $Ground_cast
 @export var coyote_time = 0.5
+@onready var combo_timer = $Combo_timer
+
 var coyete_time_counter = coyote_time
-
-
 var input_dir := InputDirection.new()
 var is_in_coyote := false
 var can_coyote := false
@@ -30,11 +34,16 @@ var character_state := CharacterState.NEUTRAL
 var character_frames : int = 0
 var is_falling: bool = false
 var is_dashing : bool = false
+var can_move : bool = true
 
 var input_buf : Array[CharacterInput]
+
 var input_max_size : int = 4
-
-
+var in_combo : bool = false
+var combo_seq:= [
+	[CharacterInput.LEFT, CharacterInput.LEFT, CharacterInput.B],
+	[CharacterInput.UP, CharacterInput.DOWN, CharacterInput.B]
+]
 
 func _ready() -> void:
 	pass
@@ -68,9 +77,16 @@ func _physics_process(delta: float) -> void:
 # --- Input ---
 
 func add_input_buf(state: CharacterInput):
-	input_buf.push_front(state)
+	if !can_move:
+		return
+
+	input_buf.push_back(state)
 	if input_buf.size() > input_max_size:
-		input_buf.pop_back()
+		input_buf.pop_front()
+		
+	if !in_combo:
+		in_combo = true
+		combo_timer.start()
 	
 
 func _update_input_direction() -> void:
@@ -78,7 +94,11 @@ func _update_input_direction() -> void:
 	input_dir.down = false
 	input_dir.left = false
 	input_dir.right = false
-	
+	input_dir.axis = Vector2.ZERO
+
+	if !can_move:
+		return
+
 	var up_down := Input.get_axis("down", "up")
 	var left_right := Input.get_axis("left", "right")
 
@@ -106,26 +126,33 @@ func get_input_direction() -> float:
 
 
 func move() -> void:
-	var direction : int
-	if Input.is_action_just_pressed("left"):
-		direction = -1
-	if Input.is_action_just_pressed("right"):
-		direction = 1
-	if direction != 0:
+	var direction := Input.get_axis("left", "right") if can_move else 0.0
+	if direction != 0.0:
 		sprite.flip_h = direction < 0
 		velocity.x = move_toward(velocity.x, direction * data.speed, data.acceleration)
 	else:
 		velocity.x = move_toward(velocity.x, 0.0, data.deceleration)
-
+	
+	if Input.is_action_just_released("up"):
+		add_input_buf(CharacterInput.UP)
+		
+	if Input.is_action_just_released("down"):
+		add_input_buf(CharacterInput.DOWN)
+		
+	if Input.is_action_just_released("left"):
+		add_input_buf(CharacterInput.LEFT)
+		
+	if Input.is_action_just_released("right"):
+		add_input_buf(CharacterInput.RIGHT)
 
 func jump() -> void:
-	if Input.is_action_just_pressed("jump") && (on_floor || is_in_coyote):
+	if can_move && Input.is_action_just_pressed("jump") && (on_floor || is_in_coyote):
 		is_jumping = true
 		velocity.y = data.jump_velocity
 		is_in_coyote = false
 		coyote_tim.stop()
 	
-	if Input.is_action_just_released("jump") && is_jumping && velocity.y < 0:
+	if can_move && Input.is_action_just_released("jump") && is_jumping && velocity.y < 0:
 		velocity.y *= data.jump_cut_multiplier
 	
 	#checking wether the player is actually jumping (going up) or falling,
@@ -150,22 +177,30 @@ func jump() -> void:
 func _on_coyote_timer_timeout() -> void:
 	is_in_coyote = false
 
-func _unhandled_input(event):
-	if event.is_action_pressed("up"):
-		add_input_buf(CharacterInput.UP)
-	
-	if event.is_action_pressed("down"):
-		add_input_buf(CharacterInput.DOWN)
-		
-	if event.is_action_pressed("left"):
-		add_input_buf(CharacterInput.LEFT)
-		
-	if event.is_action_pressed("right"):
-		add_input_buf(CharacterInput.RIGHT)
+func _unhandled_input(event: InputEvent) -> void:
+	if event.is_action_pressed("attack"):
+		add_input_buf(CharacterInput.B)
 
-
-
-
+func handle_input_combo():
+	var combo_value : int
+	var buf = input_buf.duplicate()
+	var buf_size = buf.size()
+	input_buf.clear()
+	for combo in data.combo_sequences.Combos:
+		var tbuf = buf.duplicate()
+		print("==========================")
+		print("actual tempbuf: " + str(tbuf))
+		for i in buf_size:
+			print("tested combo: " + str(combo.sequence))
+			if combo.sequence == tbuf:
+				print("combo detected: " + str(combo.action))
+				call(combo.action)
+				return
+			else:
+				tbuf.pop_front()
+				print("tempbuf after pop: " + str(tbuf))
+				
+				
 func check_on_ground():
 	if ground_cast.is_colliding() && velocity.y >= 0.0:
 		on_floor = true
@@ -175,3 +210,13 @@ func check_on_ground():
 		coyote_tim.stop()
 	else:
 		on_floor = false
+
+
+func _on_combo_timer_timeout() -> void:
+	handle_input_combo()
+	in_combo = false
+	
+	
+func A1():
+	print("====================A1 funciton=======================")
+	velocity.x -= 500

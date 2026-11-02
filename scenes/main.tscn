@@ -120,7 +120,6 @@ metadata/_edit_use_anchors_ = true
 [node name="Character" parent="." unique_id=995731284 instance=ExtResource("1_char")]
 position = Vector2(361, 301)
 data = ExtResource("2_sugp2")
-coyote_time = 0.5
 
 [node name="DebugLayer" type="CanvasLayer" parent="." unique_id=771203948]
 

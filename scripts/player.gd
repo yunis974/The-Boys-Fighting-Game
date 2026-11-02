@@ -12,8 +12,8 @@ class InputDirection:
 enum CharacterState {BLOCKING, ACTIVE, RECOVERING, AIRBORN, NEUTRAL}
 enum CharacterInput {UP, DOWN, LEFT, RIGHT, B, Y}
 
-const MAX_TIME_COMBO = 300 #ms
-
+const MAX_TIME_COMBO := 300 #ms
+var last_input_time := 0
 
 @export var data: CharacterData
 
@@ -40,10 +40,7 @@ var input_buf : Array[CharacterInput]
 
 var input_max_size : int = 4
 var in_combo : bool = false
-var combo_seq:= [
-	[CharacterInput.LEFT, CharacterInput.LEFT, CharacterInput.B],
-	[CharacterInput.UP, CharacterInput.DOWN, CharacterInput.B]
-]
+
 
 func _ready() -> void:
 	pass
@@ -79,14 +76,18 @@ func _physics_process(delta: float) -> void:
 func add_input_buf(state: CharacterInput):
 	if !can_move:
 		return
-
+	
+	var now = Time.get_ticks_msec()
+	if now - last_input_time > MAX_TIME_COMBO:
+		input_buf.clear()
+	last_input_time = now 
+	
 	input_buf.push_back(state)
 	if input_buf.size() > input_max_size:
 		input_buf.pop_front()
-		
-	if !in_combo:
-		in_combo = true
-		combo_timer.start()
+	
+	if input_buf.size() >= 3:
+		handle_input_combo()
 	
 
 func _update_input_direction() -> void:
@@ -185,7 +186,6 @@ func handle_input_combo():
 	var combo_value : int
 	var buf = input_buf.duplicate()
 	var buf_size = buf.size()
-	input_buf.clear()
 	for combo in data.combo_sequences.Combos:
 		var tbuf = buf.duplicate()
 		print("==========================")
@@ -220,3 +220,6 @@ func _on_combo_timer_timeout() -> void:
 func A1():
 	print("====================A1 funciton=======================")
 	velocity.x -= 500
+
+func A2():
+	print("====================A2 funciton=======================")
